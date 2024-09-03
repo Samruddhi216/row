@@ -53,12 +53,12 @@ jobs:
           OFFSET="${{ env.OFFSET }}"
 
           # Build the Markdown table
-          COMMENT="**Commit Timestamp**\n\n| Date       | Time   | Offset |\n|------------|--------|--------|\n| ${DATE} | ${TIME} | ${OFFSET} |"
+          COMMENT="**Commit Timestamp**
           | Date | Time |
           |-----:|---------------|
           |${DATE}|     ${TIME} |
           |     |               |
-          |     |               |
+          |     |               | "
 
           gh pr comment $PR_NUMBER --body "$COMMENT"
         env:
