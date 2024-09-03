@@ -43,6 +43,13 @@ jobs:
             echo "MERGED=false" >> $GITHUB_ENV
           fi
 
+      - name: Debug output
+        if: env.MERGED == 'true' && github.event_name == 'pull_request'
+        run: |
+          echo "Date: ${{ env.DATE }}"
+          echo "Time: ${{ env.TIME }}"
+          echo "Offset: ${{ env.OFFSET }}"
+
       - name: Add comment to PR if merged
         if: env.MERGED == 'true' && github.event_name == 'pull_request'
         run: |
@@ -51,15 +58,11 @@ jobs:
           DATE="${{ env.DATE }}"
           TIME="${{ env.TIME }}"
           OFFSET="${{ env.OFFSET }}"
-
+          
           # Build the Markdown table
-          COMMENT="**Commit Timestamp**
-          | Date | Time |
-          |-----:|---------------|
-          |${DATE}|     ${TIME} |
-          |     |               |
-          |     |               | "
-
+          COMMENT="**Commit Timestamp**\n\n| Date       | Time   | Offset |\n|------------|--------|--------|\n| ${DATE} | ${TIME} | ${OFFSET} |"
+          
+          echo "$COMMENT" # Debugging step to see the comment content
           gh pr comment $PR_NUMBER --body "$COMMENT"
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
